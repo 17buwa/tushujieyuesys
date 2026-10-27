@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@babel/types": "^8.0.8",
+    "pinia": "^4.1.0",
+    "pinia-plugin-persistedstate": "^4.7.1",
     "vue": "^3.5.42",
     "vue-router": "^4.6.4"
   },

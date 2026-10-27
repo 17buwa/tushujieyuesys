@@ -1,12 +1,20 @@
+
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+// 获取 user store：读取/修改登录状态用 store 里的方法
+const userStore = useUserStore()
 
-// 模拟登录：直接写入 token 并跳转到图书列表
-// 真实项目：这里应调用后端接口验证
+// 用户名输入框绑定的值
+const username = ref('')
+
+// 模拟登录：把用户名写入 user store，再跳转到图书列表
 function handleLogin() {
-  localStorage.setItem('library_token', 'demo-token')
+  // 调 store 的 login 方法：内部会写入 token 和用户信息
+  userStore.login(username.value || '游客')
   router.push('/books')
 }
 </script>
@@ -15,6 +23,13 @@ function handleLogin() {
   <div class="login-page">
     <div class="login-card">
       <h2>图书系统登录</h2>
+      <!-- 用户名输入框：v-model 双向绑定到 username -->
+      <input
+        v-model="username"
+        type="text"
+        placeholder="请输入用户名"
+        @keyup.enter="handleLogin"
+      />
       <button @click="handleLogin">登 录</button>
     </div>
   </div>
@@ -44,6 +59,20 @@ function handleLogin() {
 
 .login-card h2 {
   margin: 0;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #42b983;
 }
 
 .login-card button {

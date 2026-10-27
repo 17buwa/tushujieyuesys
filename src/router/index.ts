@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 // 路由表
 // 懒加载：用 () => import(...)，页面只在被访问时才加载，减小首屏体积
@@ -63,8 +64,10 @@ const router = createRouter({
 // ===== 全局前置守卫 =====
 // 每次路由跳转前都会执行这里
 router.beforeEach((to, from, next) => {
-  // 读取 localStorage 中的登录令牌
-  const token = localStorage.getItem('library_token')
+  // 获取 user store，从中读取登录状态
+  const userStore = useUserStore()
+  // 是否已登录：false = 未登录
+  const loggedIn = userStore.isLoggedIn
 
   // 设置页面标题（可选，方便浏览器标签显示）
   document.title = to.meta?.title ? `${to.meta.title} - 图书借阅管理` : '图书借阅管理'
@@ -73,10 +76,10 @@ router.beforeEach((to, from, next) => {
   // to.matched 是当前命中的所有嵌套路由，只要其中任何一层要求登录，就算需要
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
 
-  if (requiresAuth && !token) {
-    // 需要登录但没 token → 跳去登录页
+  if (requiresAuth && !loggedIn) {
+    // 需要登录但未登录 → 跳去登录页
     next('/login')
-  } else if (to.path === '/login' && token) {
+  } else if (to.path === '/login' && loggedIn) {
     // 已经登录了还去访问登录页 → 送回图书列表
     next('/books')
   } else {

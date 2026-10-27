@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
+// 获取 user store：用户名和退出逻辑都走它
+const userStore = useUserStore()
 
-// 退出登录：清掉本地 token，跳回登录页
+// 退出登录：调用 store 的 logout 清空状态，再跳回登录页
 function logout() {
-  localStorage.removeItem('library_token')
+  userStore.logout() // 内部会清空 token 和用户信息，并删除 localStorage
   router.push('/login')
 }
 </script>
@@ -19,8 +22,13 @@ function logout() {
     </header>
 
     <div class="body">
-      <!-- 侧边菜单：用 RouterLink 做导航，active-class 给当前项加高亮 -->
+      <!-- 侧边菜单：顶部显示当前登录用户名，下面用 RouterLink 做导航 -->
       <nav class="menu">
+        <div class="user-box">
+          <span class="user-icon">👤</span>
+          <!-- 读取 store 的 username getter 显示用户名 -->
+          <span class="user-name">{{ userStore.username }}</span>
+        </div>
         <RouterLink to="/books" active-class="active">图书列表</RouterLink>
         <RouterLink to="/borrow-record" active-class="active">借阅记录</RouterLink>
       </nav>
@@ -83,6 +91,27 @@ function logout() {
   color: #333;
   border-radius: 6px;
   background: #f5f5f5;
+}
+
+/* 侧边栏顶部的用户名信息区 */
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  background: #eef6f1;
+  color: #333;
+}
+
+.user-icon {
+  font-size: 18px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: bold;
 }
 
 /* 当前激活菜单项高亮 */
