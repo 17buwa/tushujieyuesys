@@ -6,6 +6,15 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import App from './App.vue'
 import router from './router'
 
+// ===== MSW mock 已关闭 =====
+// 如需重新启用，恢复以下注释代码，并在 app 挂载前 await worker.start()：
+//   import { setupWorker } from 'msw/browser'
+//   import { handlers } from './mock/handlers'
+//   if (import.meta.env.DEV) {
+//     const worker = setupWorker(...handlers)
+//     await worker.start()
+//   }
+
 const app = createApp(App)
 
 // 创建 Pinia 实例（全局状态管理）
