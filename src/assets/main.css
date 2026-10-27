@@ -1,0 +1,21 @@
+@import './base.css';
+
+/* ===== 全局基础样式（移除 Vite 演示模板的干扰样式） ===== */
+
+/* 让应用铺满全屏，由各页面的布局组件自己控制内部排版 */
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* 移除模板遗留的链接绿色样式，改回简洁默认 */
+a {
+  text-decoration: none;
+}
+
+/* 统一盒模型，避免 padding 把布局撑破 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
